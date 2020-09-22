@@ -92,7 +92,7 @@ open class Polynomial(coef: DoubleArray): Comparable<Polynomial> {
     }
     override fun toString(): String {
         //TODO refactor compares to CompareTo
-        val out  = StringBuilder();
+        val out  = StringBuilder()
         coef.reversed().forEachIndexed { i, v ->
             val j = power - i //Reversed indexes
             if (v != 0.0 || power == 0) {

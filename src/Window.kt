@@ -18,9 +18,9 @@ class Window: JFrame() {
         //isResizable = false
         mainPanel = JPanel()
         mainPanel.background = Color.CYAN
-        controlPanel = JPanel()
+        controlPanel = LagrangeControl()
         controlPanel.background = Color.GREEN
-        controlPanel.add(JButton("Button"))
+
         val gl = GroupLayout(contentPane)
         gl.setVerticalGroup(gl.createSequentialGroup()
                 .addGap(4)
