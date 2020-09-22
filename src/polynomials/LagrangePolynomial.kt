@@ -1,34 +1,34 @@
+
 package polynomials
 
-import kotlin.collections.MutableMap
+class Lagrange(xfx: MutableMap<Double, Double>) : Polynomial(){
 
-class LagrangePolynomial(x_fx: MutableMap<Double, Double>) : Polynomial(){
-
-    val x_fx = x_fx.toMutableMap()
-
-    init {
-        var p = Polynomial()
-        x_fx.forEach{
-            p += fundamental(it.key) * it.value
+    val xfx = xfx.toMutableMap()
+    init{
+        val p = Polynomial()
+        xfx.forEach {
+            val r = fundamental(it.key)
+            if (r != null) p += r * it.value
+            else return@forEach
         }
-
+        coef = p.coeffitients
     }
 
-    private fun fundamental(key: Double): Polynomial {
-        var p = Polynomial(doubleArrayOf(1.0))
-        x_fx.forEach {
-            if (it.key != key){
-                val m = Polynomial(doubleArrayOf(it.key, 1.0)) /
+    /**
+     * Вычисление фундаментальных полиномов Лагранжа
+     */
+    private fun fundamental(key: Double): Polynomial? {
+        var p: Polynomial = Polynomial(doubleArrayOf(1.0))
+        xfx.forEach {
+            if (it.key.compareTo(key)!=0){
+                val m = Polynomial(doubleArrayOf(-it.key, 1.0)) /
                         (key - it.key)
-                if (m != null) {
-                    p *= m
-                }else return null
-
+                if (m != null){
+                    //TODO
+                } else return@fundamental null
             }
-
-
         }
-        return p;
+        return p
     }
 
 }

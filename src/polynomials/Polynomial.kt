@@ -11,8 +11,9 @@ open class Polynomial(coef: DoubleArray): Comparable<Polynomial> {
      */
     protected var coef: DoubleArray = coef.clone()
 
-    val coeffitients: DoubleArray
+    var coeffitients: DoubleArray
         get() = coef.clone()
+        set(value) {}
 
     private val ZERO = 0.0 //Изменить
 
@@ -51,10 +52,9 @@ open class Polynomial(coef: DoubleArray): Comparable<Polynomial> {
      * @return полином, являющийся результатом суммирования данного полинома с другим
      */
     operator fun plus(other: Polynomial) =
-        Polynomial( DoubleArray(max(power, other.power) + 1)
-        {
+        Polynomial( DoubleArray(max(power, other.power) + 1) {
             (if (it<coef.size) coef[it] else 0.0) +
-                    (if (it<other.coef[it]) other.coef[it] else 0.0)
+                    (if (it<other.coef.size) other.coef[it] else 0.0)
         }
         )
 
@@ -74,6 +74,13 @@ open class Polynomial(coef: DoubleArray): Comparable<Polynomial> {
     operator fun minus(other: Polynomial) =
         this + other * -1.0
 
+
+    operator fun plusAssign(other: Polynomial){
+        coeffitients = DoubleArray(max(power, other.power) + 1) {
+            (if (it<coef.size) coef[it] else 0.0) +
+                    (if (it<other.coef.size) other.coef[it] else 0.0)
+        }
+    }
     /**
      * Деление полинома на число
      * @param k - вещественный ненулевой делитель
@@ -102,12 +109,8 @@ open class Polynomial(coef: DoubleArray): Comparable<Polynomial> {
     }
 
     operator fun invoke(x: Double): Double {
-//        var add = 1.0;
-//        return coef.reduce { v, result ->
-//            add; result + add *= x
-//        }
       return coef.mapIndexed() { i, v -> v * x.pow(i) }.sum()
-//       return coef.reduceIndexed { i, result, v -> result +  v * x.pow(i) }
+
     }
 
     /**
