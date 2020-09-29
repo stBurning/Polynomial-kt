@@ -1,4 +1,3 @@
-
 package polynomials
 
 class Lagrange(xfx: MutableMap<Double, Double>) : Polynomial(){
@@ -18,13 +17,13 @@ class Lagrange(xfx: MutableMap<Double, Double>) : Polynomial(){
      * Вычисление фундаментальных полиномов Лагранжа
      */
     private fun fundamental(key: Double): Polynomial? {
-        val p = Polynomial(doubleArrayOf(1.0))
+        var p: Polynomial = Polynomial(doubleArrayOf(1.0))
         xfx.forEach {
             if (it.key.compareTo(key)!=0){
                 val m = Polynomial(doubleArrayOf(-it.key, 1.0)) /
                         (key - it.key)
                 if (m != null){
-                    //TODO
+                    //TODO p *= m
                 } else return@fundamental null
             }
         }

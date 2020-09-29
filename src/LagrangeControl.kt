@@ -1,4 +1,6 @@
 import javax.swing.*
+import javax.swing.event.ChangeEvent
+import javax.swing.event.ChangeListener
 
 class LagrangeControl: JPanel() {
     private val xMinSpinner: JSpinner = JSpinner()
@@ -56,6 +58,14 @@ class LagrangeControl: JPanel() {
         xMinSpinner.model = SpinnerNumberModel(0.0, -100.0, 100.0, 0.1)
         xMinSpinner.model = SpinnerNumberModel(0.0, -100.0, 100.0, 0.1)
         xMinSpinner.model = SpinnerNumberModel(0.0, -100.0, 100.0, 0.1)
+
+        var xMinVal = xMinSpinner.value
+        var xMaxVal = xMaxSpinner.value
+        var yMinVal = yMinSpinner.value
+        var yMaxVal = yMaxSpinner.value
+
+
+       
         layout = gl
     }
 }

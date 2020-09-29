@@ -11,23 +11,18 @@ open class Polynomial(coef: DoubleArray): Comparable<Polynomial> {
      */
     protected var coef: DoubleArray = coef.clone()
 
-    var coeffitients: DoubleArray
+    val coeffitients: DoubleArray
         get() = coef.clone()
-        set(value) {}
 
     private val ZERO = 0.0 //Изменить
 
-    /**
-     * Степень полинома
-     */
+    /**Степень полинома*/
     val power : Int
         get() = coef.size - 1
-
 
     init{
         correctPower()
     }
-
     /**
      * Вторичный конструктор для создания полинома нулевой степени = 0
      */
@@ -59,6 +54,24 @@ open class Polynomial(coef: DoubleArray): Comparable<Polynomial> {
         )
 
     /**
+     * @param other полином, на который производится умножение
+     * @return произведение двух полиномов
+     */
+    operator fun times(other: Polynomial): Polynomial{
+        //Создание массива коэффициентов нового полинома
+        val t = DoubleArray(power + other.power + 1){ 0.0 }
+        //Для каждого коэффициента первого полинома и
+        coef.forEachIndexed { ti, tc ->
+            //коэффициента второго полинома
+            other.coef.forEachIndexed{ oi, oc ->
+                t[ti + oi] += tc * oc
+            }
+        }
+        // Создание нового полинома по рассчитанным коэффициентам
+        return Polynomial(t)
+    }
+
+    /**
      * Определение значения произведения полинома на число
      * @param k вещественный коэффициент
      * @return результат умножения данного (this) полинома на число
@@ -76,7 +89,7 @@ open class Polynomial(coef: DoubleArray): Comparable<Polynomial> {
 
 
     operator fun plusAssign(other: Polynomial){
-        coeffitients = DoubleArray(max(power, other.power) + 1) {
+        coef = DoubleArray(max(power, other.power) + 1) {
             (if (it<coef.size) coef[it] else 0.0) +
                     (if (it<other.coef.size) other.coef[it] else 0.0)
         }
