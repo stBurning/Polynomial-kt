@@ -2,7 +2,7 @@ package polynomials
 
 
 //this (mutableMapOf)
-class NewtonPolynomial(var points: ArrayList<Pair<Double, Double>>): Polynomial() {
+class NewtonPolynomial(private var points: ArrayList<Pair<Double, Double>>): Polynomial() {
 
     private var divDifferenceData: MutableMap<Pair<Int, Int>, Double> = mutableMapOf()
 
@@ -25,7 +25,7 @@ class NewtonPolynomial(var points: ArrayList<Pair<Double, Double>>): Polynomial(
                 if (last - first <= 0) {
                     divDifferenceData[Pair(first, first)] = points[last].second
                     return points[last].second
-                } // return f(x)
+                } // returns f(x)
 
                 val left = divDifference(first + 1, last)
                 val right = divDifference(first, last - 1)
