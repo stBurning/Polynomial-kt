@@ -2,7 +2,7 @@ package polynomials
 
 class Lagrange(xfx: MutableMap<Double, Double>) : Polynomial(){
 
-    val xfx = xfx.toMutableMap()
+    private val xfx = xfx.toMutableMap()
     init{
         val p = Polynomial()
         xfx.forEach {
@@ -23,7 +23,7 @@ class Lagrange(xfx: MutableMap<Double, Double>) : Polynomial(){
                 val m = Polynomial(doubleArrayOf(-it.key, 1.0)) /
                         (key - it.key)
                 if (m != null){
-                    //TODO p *= m
+                    p *= m
                 } else return@fundamental null
             }
         }

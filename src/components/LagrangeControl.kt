@@ -1,16 +1,48 @@
+package components
+
 import javax.swing.*
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
+
+
 class LagrangeControl: JPanel() {
-    private val xMinSpinner: JSpinner = JSpinner()
-    private val xMaxSpinner: JSpinner = JSpinner()
-    private val yMinSpinner: JSpinner = JSpinner()
-    private val yMaxSpinner: JSpinner = JSpinner()
+    private val xMinSpinnerModel = SpinnerNumberModel(0.0, -100.0, 9.9, 0.1)
+    private val xMaxSpinnerModel = SpinnerNumberModel(10.0, 0.1, 100.0, 0.1)
+    private val yMinSpinnerModel = SpinnerNumberModel(0.0, -100.0, 9.9, 0.1)
+    private val yMaxSpinnerModel = SpinnerNumberModel(10.0, 0.1, 100.0, 0.1)
+    private val xMinSpinner: JSpinner = JSpinner(xMinSpinnerModel)
+    private val xMaxSpinner: JSpinner = JSpinner(xMaxSpinnerModel)
+    private val yMinSpinner: JSpinner = JSpinner(yMinSpinnerModel)
+    private val yMaxSpinner: JSpinner = JSpinner(yMaxSpinnerModel)
     private val xMinLabel: JLabel = JLabel("xMin")
     private val xMaxLabel: JLabel = JLabel("xMax")
     private val yMinLabel: JLabel = JLabel("yMin")
     private val yMaxLabel: JLabel = JLabel("yMax")
+
+
+    fun getXMin(): Double {
+        return xMinSpinnerModel.number.toDouble()
+    }
+    fun getXMax(): Double {
+        return xMaxSpinnerModel.number.toDouble()
+    }
+    fun getYMin(): Double {
+        return yMinSpinnerModel.number.toDouble()
+    }
+    fun getYMax(): Double {
+        return yMaxSpinnerModel.number.toDouble()
+    }
+
+    private val changeListeners = mutableListOf<(Double, Double, Double, Double)->Unit>()
+
+     fun addChangeListener(l: (Double, Double, Double, Double) -> Unit){
+        changeListeners.add(l)
+    }
+
+    fun removeChangeListener(l: (Double, Double, Double, Double) -> Unit){
+        changeListeners.remove(l)
+    }
 
     init {
         val gl = GroupLayout(this)
@@ -54,18 +86,22 @@ class LagrangeControl: JPanel() {
                 ).addGap(20)
         )
 
-        xMinSpinner.model = SpinnerNumberModel(0.0, -100.0, 100.0, 0.1)
-        xMinSpinner.model = SpinnerNumberModel(0.0, -100.0, 100.0, 0.1)
-        xMinSpinner.model = SpinnerNumberModel(0.0, -100.0, 100.0, 0.1)
-        xMinSpinner.model = SpinnerNumberModel(0.0, -100.0, 100.0, 0.1)
-
-        var xMinVal = xMinSpinner.value
-        var xMaxVal = xMaxSpinner.value
-        var yMinVal = yMinSpinner.value
-        var yMaxVal = yMaxSpinner.value
-
-
-       
+        xMinSpinner.addChangeListener {
+            xMaxSpinnerModel.minimum = xMinSpinnerModel.number.toDouble() + 0.1
+            changeListeners.forEach { l -> l(getXMin(), getXMax(), getYMin(), getYMax()) }
+        }
+        xMaxSpinner.addChangeListener {
+            xMinSpinnerModel.maximum = xMaxSpinnerModel.number.toDouble() - 0.1
+            changeListeners.forEach { l -> l(getXMin(), getXMax(), getYMin(), getYMax()) }
+        }
+        yMinSpinner.addChangeListener {
+            yMaxSpinnerModel.minimum = yMinSpinnerModel.number.toDouble() + 0.1
+            changeListeners.forEach { l -> l(getXMin(), getXMax(), getYMin(), getYMax()) }
+        }
+        yMaxSpinner.addChangeListener {
+            yMinSpinnerModel.maximum = yMaxSpinnerModel.number.toDouble() - 0.1
+            changeListeners.forEach { l -> l(getXMin(), getXMax(), getYMin(), getYMax()) }
+        }
         layout = gl
     }
 }
