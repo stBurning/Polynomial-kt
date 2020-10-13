@@ -1,15 +1,12 @@
 package components
 
 import javax.swing.*
-import javax.swing.event.ChangeEvent
-import javax.swing.event.ChangeListener
 
 
-
-class LagrangeControl: JPanel() {
-    private val xMinSpinnerModel = SpinnerNumberModel(0.0, -100.0, 9.9, 0.1)
+class LagrangeControl : JPanel() {
+    private val xMinSpinnerModel = SpinnerNumberModel(-1.0, -100.0, 9.9, 0.1)
     private val xMaxSpinnerModel = SpinnerNumberModel(10.0, 0.1, 100.0, 0.1)
-    private val yMinSpinnerModel = SpinnerNumberModel(0.0, -100.0, 9.9, 0.1)
+    private val yMinSpinnerModel = SpinnerNumberModel(-1.0, -100.0, 9.9, 0.1)
     private val yMaxSpinnerModel = SpinnerNumberModel(10.0, 0.1, 100.0, 0.1)
     private val xMinSpinner: JSpinner = JSpinner(xMinSpinnerModel)
     private val xMaxSpinner: JSpinner = JSpinner(xMaxSpinnerModel)
@@ -24,23 +21,26 @@ class LagrangeControl: JPanel() {
     fun getXMin(): Double {
         return xMinSpinnerModel.number.toDouble()
     }
+
     fun getXMax(): Double {
         return xMaxSpinnerModel.number.toDouble()
     }
+
     fun getYMin(): Double {
         return yMinSpinnerModel.number.toDouble()
     }
+
     fun getYMax(): Double {
         return yMaxSpinnerModel.number.toDouble()
     }
 
-    private val changeListeners = mutableListOf<(Double, Double, Double, Double)->Unit>()
+    private val changeListeners = mutableListOf<(Double, Double, Double, Double) -> Unit>()
 
-     fun addChangeListener(l: (Double, Double, Double, Double) -> Unit){
+    fun addChangeListener(l: (Double, Double, Double, Double) -> Unit) {
         changeListeners.add(l)
     }
 
-    fun removeChangeListener(l: (Double, Double, Double, Double) -> Unit){
+    fun removeChangeListener(l: (Double, Double, Double, Double) -> Unit) {
         changeListeners.remove(l)
     }
 
@@ -76,8 +76,8 @@ class LagrangeControl: JPanel() {
 
                 ).addGap(100)
                 .addGroup(gl.createParallelGroup()
-                        .addComponent(xMaxLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE)
-                        .addComponent(yMaxLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE)
+                        .addComponent(xMaxLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(yMaxLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
                 )
                 .addGap(10)
                 .addGroup(gl.createParallelGroup()

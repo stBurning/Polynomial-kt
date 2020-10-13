@@ -1,28 +1,30 @@
 package util
 
-import components.CartesianPainter
-import components.DrawingPanel
-
 object Converter {
-    fun xCrt2Scr(x: Double, plane: ConvertData): Int { //Декартовые в экранные
-        val kw = plane.width / (plane.xMax - plane.xMin)
-        return (x * kw + (-plane.xMin) * kw).toInt()
+    fun xCrt2Scr(x: Double, data: ConvertData): Int {
+        val kw = data.width / (data.xMax - data.xMin)
+        return (x * kw + (-data.xMin) * kw).toInt()
     }
 
-    fun xScr2Crt(x: Int, plane: ConvertData): Double {//Экранные в декартовые
-        val kw = plane.width / (plane.xMax - plane.xMin)
-        return x * (1.0 / kw) + plane.xMin
+    fun xScr2Crt(x: Int, data: ConvertData): Double {
+        val kw = data.width / (data.xMax - data.xMin)
+        return x * (1.0 / kw) + data.xMin
     }
 
-    fun yCrt2Scr(y: Double, plane: ConvertData): Int {//Декартовые в экранные
-        val kh = plane.height / (plane.yMax - plane.yMin);
-        return (kh * (plane.yMax - y)).toInt()
+    fun yCrt2Scr(y: Double, data: ConvertData): Int {
+        val kh = data.height / (data.yMax - data.yMin);
+        return (kh * (data.yMax - y)).toInt()
     }
 
-    fun yScr2Crt(y: Int, plane: ConvertData): Double {//Экранные в декартовые
-        val kh = plane.height / (plane.yMax - plane.yMin);
-        return (-y) * (1.0 / kh) + plane.yMax;
+    fun yScr2Crt(y: Int, data: ConvertData): Double {
+        val kh = data.height / (data.yMax - data.yMin)
+        return (-y) * (1.0 / kh) + data.yMax
     }
 }
 
-data class ConvertData( val width: Int, val height: Int, val xMin: Double, val xMax: Double, val yMin: Double, val yMax: Double)
+data class ConvertData(val _width: Int, val _height: Int, val xMin: Double, val xMax: Double, val yMin: Double, val yMax: Double){
+    val width: Int
+    get() = _width - 1
+    val height: Int
+    get() = _height - 1
+}

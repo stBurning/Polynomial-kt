@@ -1,7 +1,5 @@
-import polynomials.NewtonPolynomial
-
 fun main() {
     val window = Window()
     window.isVisible = true
-    window.isResizable = false
+    window.isResizable = true
 }
