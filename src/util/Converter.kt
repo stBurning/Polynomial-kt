@@ -12,7 +12,7 @@ object Converter {
     }
 
     fun yCrt2Scr(y: Double, data: ConvertData): Int {
-        val kh = data.height / (data.yMax - data.yMin);
+        val kh = data.height / (data.yMax - data.yMin)
         return (kh * (data.yMax - y)).toInt()
     }
 
@@ -22,9 +22,11 @@ object Converter {
     }
 }
 
-data class ConvertData(val _width: Int, val _height: Int, val xMin: Double, val xMax: Double, val yMin: Double, val yMax: Double){
-    val width: Int
+data class ConvertData(var _width: Int, var _height: Int, val xMin: Double, val xMax: Double, val yMin: Double, val yMax: Double){
+    var width: Int
     get() = _width - 1
-    val height: Int
+        set(value) {_height = value}
+    var height: Int
     get() = _height - 1
+        set(value) {_width = value}
 }

@@ -51,4 +51,5 @@ class NewtonPolynomial(private var points: ArrayList<Pair<Double, Double>>) : Po
         coef = base.coeffitients
     }
 
+
 }

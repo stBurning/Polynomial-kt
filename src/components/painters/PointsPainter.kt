@@ -7,12 +7,13 @@ import java.awt.Graphics
 import kotlin.math.abs
 
 data class Point(var x: Double, var y: Double)
-class PointsPainter(private var convertData: ConvertData) : Painter {
 
-    private var radius = 5 // Радиус в пикселях
+class PointsPainter(private var convertData: ConvertData, private var radius: Int) : Painter {
+
     private var crtRad = Converter.xScr2Crt(radius, convertData) - Converter.xScr2Crt(0, convertData) // Радиус в декатровых координатах
 
-    private val points = mutableListOf<Point>()
+    private var points = mutableListOf<Point>()
+    fun getPoints(): MutableList<Point> {return points.toMutableList()}
 
     override fun draw(g: Graphics?, Width: Int, Height: Int) {
         if (g != null) {
