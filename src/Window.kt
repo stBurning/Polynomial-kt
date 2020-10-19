@@ -1,8 +1,8 @@
-import components.painters.CartesianPainter
 import components.DrawingPanel
-import components.LagrangeControl
-import components.painters.PolynomialPainter
+import components.ControlPanel
+import components.painters.CartesianPainter
 import components.painters.PointsPainter
+import components.painters.PolynomialPainter
 import polynomials.NewtonPolynomial
 import util.ConvertData
 import util.Converter
@@ -16,22 +16,23 @@ import javax.swing.GroupLayout
 import javax.swing.JFrame
 import javax.swing.JPanel
 
+/**Окно приложения для визуализации полинома Ньютона**/
 class Window : JFrame() {
 
-    private val minSize = Dimension(720, 480)
-    private val mainPanel: JPanel
-    private val controlPanel: JPanel
-
+    private val minSize = Dimension(720, 480) // Размеры окна
+    private val mainPanel: JPanel // Панель визуализации
+    private val controlPanel: JPanel // Панель с параметрами
 
     init {
-        size = minSize
-        defaultCloseOperation = EXIT_ON_CLOSE
+        size = minSize // Задаем размеры окна
+        defaultCloseOperation = EXIT_ON_CLOSE // При закрытии окна завершаем программу
         minimumSize = minSize
-        controlPanel = LagrangeControl()
-        mainPanel = DrawingPanel()
-        mainPanel.background = Color.WHITE
+        controlPanel = ControlPanel() // Инизиализируем панель с параметрами
+        mainPanel = DrawingPanel() // Инизиализируем панель визуализации
+        mainPanel.background = Color.WHITE //
         controlPanel.background = Color.LIGHT_GRAY
 
+        /**Задаем макет - расположение обьектов в окне**/
         val gl = GroupLayout(contentPane)
         gl.setVerticalGroup(gl.createSequentialGroup()
                 .addGap(4)
@@ -51,23 +52,31 @@ class Window : JFrame() {
         )
         layout = gl
         pack()
+        /**Задаем данные для конвертера
+         * см. Converter - конвертер для соотнесения декартовых и экранных координат**/
         var convertData = ConvertData(
-                mainPanel.width,
-                mainPanel.height,
-                controlPanel.getXMin(),
-                controlPanel.getXMax(),
-                controlPanel.getYMin(),
-                controlPanel.getYMax())
+                // Параметры панели для отрисовки
+                mainPanel.width, // Ширина панели
+                mainPanel.height, // Высота панели
+                //Параметры области декартовой системы координат [A, B] x [C, D]
+                controlPanel.getXMin(), // A
+                controlPanel.getXMax(), // B
+                controlPanel.getYMin(), // C
+                controlPanel.getYMax()) // D
 
+        /**Создаем необходимые обьекты**/
         val cartesianPainter = CartesianPainter(convertData) // Объект для отрисовки декартовый системы координат
-        val pointsPainter = PointsPainter(convertData, 5) // Объект для отрисовки узлов
-        var polynomial = NewtonPolynomial(ArrayList()) // Полином Ньютона
+        val pointsPainter = PointsPainter(convertData, 5) // Объект для отрисовки узлов (с радиусом 5px)
+        var polynomial = NewtonPolynomial() // Полином Ньютона
         val polynomialPainter = PolynomialPainter(convertData) // Объект для отрисоки полиномов
-        polynomialPainter.addPolynomial(polynomial)
-        mainPanel.addPainter(cartesianPainter)
-        mainPanel.addPainter(pointsPainter)
-        mainPanel.addPainter(polynomialPainter)
-        //В случае изменения области обновляем отрисовщики
+        polynomialPainter.addPolynomial(polynomial) // Добавляем полином в отрисовщик полиномов
+
+        /** К панели визуализации добавляем отрисовщики: **/
+        mainPanel.addPainter(cartesianPainter) // отрисовщик декартовой системы координат
+        mainPanel.addPainter(pointsPainter) // отрисовщик точек
+        mainPanel.addPainter(polynomialPainter) // отрисовщик полиномов
+
+        /**В случае изменения параметров области графика обновляем convertData и отрисовщики, и перерисовываем график**/
         controlPanel.addChangeListener { xMin: Double, xMax: Double, yMin: Double, yMax: Double ->
             convertData = ConvertData(mainPanel.width, mainPanel.height, xMin, xMax, yMin, yMax)
             cartesianPainter.update(mainPanel.width, mainPanel.height, xMin, xMax, yMin, yMax)
@@ -75,7 +84,8 @@ class Window : JFrame() {
             polynomialPainter.update(mainPanel.width, mainPanel.height, xMin, xMax, yMin, yMax)
             mainPanel.paint(mainPanel.graphics)
         }
-        mainPanel.addComponentListener(object : ComponentAdapter(){
+        /**В случае изменения размеров окна обновляем convertData и отрисовщики*/
+        mainPanel.addComponentListener(object : ComponentAdapter() {
             override fun componentResized(e: ComponentEvent?) {
                 convertData = ConvertData(
                         mainPanel.width,
@@ -87,30 +97,25 @@ class Window : JFrame() {
                 mainPanel.updatePainters()
             }
         })
-
-        mainPanel.addMouseListener(object: MouseAdapter(){
+        /** Обрабатываем нажатия на кнопки мыши**/
+        mainPanel.addMouseListener(object : MouseAdapter() {
             override fun mouseClicked(e: MouseEvent?) {
                 if (e != null) {
-                    println("${Converter.xScr2Crt(e.x, convertData)} , ${Converter.yScr2Crt(e.y, convertData)}")
-                    if (e.button == MouseEvent.BUTTON1) {
-                        pointsPainter.addPoint(e.x, e.y)
-                        polynomial.addNode(Converter.xScr2Crt(e.x, convertData),
+                    if (e.button == MouseEvent.BUTTON1) { // Если нажата левая кнопка мыши
+                        pointsPainter.addPoint(e.x, e.y) // Добавляем точку на отрисовку
+                        polynomial.addNode(Converter.xScr2Crt(e.x, convertData), // Добавляем узел к полиному Ньютона
                                 Converter.yScr2Crt(e.y, convertData))
                     }
-                    if (e.button == MouseEvent.BUTTON3) {
-                        pointsPainter.removePoint(e.x, e.y) //Удаляем узел из отрисовщика точек
+                    if (e.button == MouseEvent.BUTTON3) { // Если нажата правая кнопка мыши
+                        pointsPainter.removePoint(e.x, e.y) // Удаляем узел из отрисовщика точек
                         polynomialPainter.removePolynomial(polynomial) // Удаляем полином из отрисовщика полиномов
-                        val newPoints = pointsPainter.getPoints()
-                        polynomial = NewtonPolynomial(arrayListOf()) //Создаем новый полином
-                        newPoints.forEach {p -> polynomial.addNode(p.x, p.y)}
-                        polynomialPainter.addPolynomial(polynomial)
+                        val newPoints = pointsPainter.getPoints() // Получаем оставшиеся точки
+                        polynomial = NewtonPolynomial(arrayListOf()) // Создаем новый полином
+                        newPoints.forEach { p -> polynomial.addNode(p.x, p.y) } // Добавляем оставшиеся точки как узлы полинома
+                        polynomialPainter.addPolynomial(polynomial) // Добавляем полином на отрисовку
                     }
-                    mainPanel.paint(mainPanel.graphics)
+                    mainPanel.paint(mainPanel.graphics) // Отрисовываем панель
                 }
-            }
-
-            override fun mouseMoved(e: MouseEvent?) {
-
             }
         })
 

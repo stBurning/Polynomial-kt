@@ -3,7 +3,7 @@ package components
 import javax.swing.*
 
 
-class LagrangeControl : JPanel() {
+class ControlPanel : JPanel() {
     private val xMinSpinnerModel = SpinnerNumberModel(-1.0, -100.0, 9.9, 0.1)
     private val xMaxSpinnerModel = SpinnerNumberModel(10.0, 0.1, 100.0, 0.1)
     private val yMinSpinnerModel = SpinnerNumberModel(-1.0, -100.0, 9.9, 0.1)
