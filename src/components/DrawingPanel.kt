@@ -4,17 +4,14 @@ import components.painters.Painter
 import java.awt.Graphics
 import javax.swing.JPanel
 
+/** Панель, для отрисовки графики **/
 class DrawingPanel : JPanel() {
-    /** Панель, для отрисовки графики **/
+
     private val painters = mutableListOf<Painter>()
 
     override fun paint(g: Graphics?) {
         super.paint(g)
-        painters.forEach { painter ->
-            //painter.update(this.width, this.height)
-            painter.draw(g, this.width, this.height)
-        }
-
+        painters.forEach { painter -> painter.draw(g, this.width, this.height) }
     }
 
     fun addPainter(p: Painter) {
@@ -26,11 +23,8 @@ class DrawingPanel : JPanel() {
         painters.remove(p)
         repaint()
     }
+
     fun updatePainters(){
-        painters.forEach { painter ->
-            painter.update(width, height)
-        }
+        painters.forEach { painter -> painter.update(width, height) }
     }
-
-
 }

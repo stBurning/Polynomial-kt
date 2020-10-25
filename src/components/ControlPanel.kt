@@ -4,6 +4,7 @@ import javax.swing.*
 
 
 class ControlPanel : JPanel() {
+
     private val xMinSpinnerModel = SpinnerNumberModel(-1.0, -100.0, 9.9, 0.1)
     private val xMaxSpinnerModel = SpinnerNumberModel(10.0, 0.1, 100.0, 0.1)
     private val yMinSpinnerModel = SpinnerNumberModel(-1.0, -100.0, 9.9, 0.1)
@@ -18,21 +19,13 @@ class ControlPanel : JPanel() {
     private val yMaxLabel: JLabel = JLabel("yMax")
 
 
-    fun getXMin(): Double {
-        return xMinSpinnerModel.number.toDouble()
-    }
+    fun getXMin(): Double { return xMinSpinnerModel.number.toDouble() }
 
-    fun getXMax(): Double {
-        return xMaxSpinnerModel.number.toDouble()
-    }
+    fun getXMax(): Double { return xMaxSpinnerModel.number.toDouble() }
 
-    fun getYMin(): Double {
-        return yMinSpinnerModel.number.toDouble()
-    }
+    fun getYMin(): Double { return yMinSpinnerModel.number.toDouble() }
 
-    fun getYMax(): Double {
-        return yMaxSpinnerModel.number.toDouble()
-    }
+    fun getYMax(): Double { return yMaxSpinnerModel.number.toDouble() }
 
     private val changeListeners = mutableListOf<(Double, Double, Double, Double) -> Unit>()
 

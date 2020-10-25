@@ -13,6 +13,7 @@ class PointsPainter(private var convertData: ConvertData, private var radius: In
     private var crtRad = Converter.xScr2Crt(radius, convertData) - Converter.xScr2Crt(0, convertData) // Радиус в декатровых координатах
 
     private var points = mutableListOf<Point>()
+
     fun getPoints(): MutableList<Point> {return points.toMutableList()}
 
     override fun draw(g: Graphics?, Width: Int, Height: Int) {
@@ -51,8 +52,6 @@ class PointsPainter(private var convertData: ConvertData, private var radius: In
                 return@forEach
             }
         }
-        if (pointToRemove != null) {
-            points.remove(pointToRemove!!)
-        }
+        if (pointToRemove != null) points.remove(pointToRemove!!)
     }
 }

@@ -12,6 +12,7 @@ import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.lang.Exception
 import javax.swing.GroupLayout
 import javax.swing.JFrame
 import javax.swing.JPanel
@@ -66,7 +67,7 @@ class Window : JFrame() {
 
         /**Создаем необходимые обьекты**/
         val cartesianPainter = CartesianPainter(convertData) // Объект для отрисовки декартовый системы координат
-        val pointsPainter = PointsPainter(convertData, 5) // Объект для отрисовки узлов (с радиусом 5px)
+        val pointsPainter = PointsPainter(convertData, 7) // Объект для отрисовки узлов (с радиусом 5px)
         var polynomial = NewtonPolynomial() // Полином Ньютона
         val polynomialPainter = PolynomialPainter(convertData) // Объект для отрисоки полиномов
         polynomialPainter.addPolynomial(polynomial) // Добавляем полином в отрисовщик полиномов
@@ -102,9 +103,15 @@ class Window : JFrame() {
             override fun mouseClicked(e: MouseEvent?) {
                 if (e != null) {
                     if (e.button == MouseEvent.BUTTON1) { // Если нажата левая кнопка мыши
-                        pointsPainter.addPoint(e.x, e.y) // Добавляем точку на отрисовку
-                        polynomial.addNode(Converter.xScr2Crt(e.x, convertData), // Добавляем узел к полиному Ньютона
-                                Converter.yScr2Crt(e.y, convertData))
+                        try {
+                            polynomial.addNode(Converter.xScr2Crt(e.x, convertData), // Добавляем узел к полиному Ньютона
+                                    Converter.yScr2Crt(e.y, convertData))
+                            pointsPainter.addPoint(e.x, e.y) // Добавляем точку на отрисовку
+                        } catch (e: Exception){
+                            println(e.message)
+                        }
+
+
                     }
                     if (e.button == MouseEvent.BUTTON3) { // Если нажата правая кнопка мыши
                         pointsPainter.removePoint(e.x, e.y) // Удаляем узел из отрисовщика точек

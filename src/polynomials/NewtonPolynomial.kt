@@ -1,5 +1,7 @@
 package polynomials
 
+import kotlin.math.abs
+
 /**
  * Класс реализующий полином Ньютона
  * @see Polynomial - базовый класс для полиномов
@@ -45,7 +47,7 @@ class NewtonPolynomial() : Polynomial() {
     fun addNode(x: Double, y: Double) {
         // В случае, если для данного x уже задан узел, выбрасываем исключение
         points.forEach { pair ->
-            if (pair.first == x) {
+            if (abs(pair.first - x) < 0.05) {
                 throw Exception("Невозможно добавить узел ($x, $y), так как для x = $x уже задано значение y = ${pair.first}.")
             }
         } // Иначе вычисляем по формуле
