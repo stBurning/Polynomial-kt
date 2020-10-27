@@ -70,12 +70,15 @@ class Window : JFrame() {
         val pointsPainter = PointsPainter(convertData, 7) // Объект для отрисовки узлов (с радиусом 5px)
         var polynomial = NewtonPolynomial() // Полином Ньютона
         val polynomialPainter = PolynomialPainter(convertData) // Объект для отрисоки полиномов
+        val derPolynomialPainter = PolynomialPainter(convertData)
         polynomialPainter.addPolynomial(polynomial) // Добавляем полином в отрисовщик полиномов
+        derPolynomialPainter.addPolynomial(polynomial.derivative())
 
         /** К панели визуализации добавляем отрисовщики: **/
         mainPanel.addPainter(cartesianPainter) // отрисовщик декартовой системы координат
         mainPanel.addPainter(pointsPainter) // отрисовщик точек
         mainPanel.addPainter(polynomialPainter) // отрисовщик полиномов
+        mainPanel.addPainter(derPolynomialPainter)
 
         /**В случае изменения параметров области графика обновляем convertData и отрисовщики, и перерисовываем график**/
         controlPanel.addChangeListener { xMin: Double, xMax: Double, yMin: Double, yMax: Double ->
@@ -83,6 +86,12 @@ class Window : JFrame() {
             cartesianPainter.update(mainPanel.width, mainPanel.height, xMin, xMax, yMin, yMax)
             pointsPainter.update(mainPanel.width, mainPanel.height, xMin, xMax, yMin, yMax)
             polynomialPainter.update(mainPanel.width, mainPanel.height, xMin, xMax, yMin, yMax)
+            derPolynomialPainter.update(mainPanel.width, mainPanel.height, xMin, xMax, yMin, yMax)
+            mainPanel.paint(mainPanel.graphics)
+        }
+        controlPanel.addColorListener {
+            polynomialPainter.setColor(controlPanel.getColor1())
+            derPolynomialPainter.setColor(controlPanel.getColor2())
             mainPanel.paint(mainPanel.graphics)
         }
         /**В случае изменения размеров окна обновляем convertData и отрисовщики*/
@@ -104,8 +113,10 @@ class Window : JFrame() {
                 if (e != null) {
                     if (e.button == MouseEvent.BUTTON1) { // Если нажата левая кнопка мыши
                         try {
+                            derPolynomialPainter.removeAll()
                             polynomial.addNode(Converter.xScr2Crt(e.x, convertData), // Добавляем узел к полиному Ньютона
                                     Converter.yScr2Crt(e.y, convertData))
+                            derPolynomialPainter.addPolynomial(polynomial.derivative())
                             pointsPainter.addPoint(e.x, e.y) // Добавляем точку на отрисовку
                         } catch (e: Exception){
                             println(e.message)
@@ -120,6 +131,8 @@ class Window : JFrame() {
                         polynomial = NewtonPolynomial(arrayListOf()) // Создаем новый полином
                         newPoints.forEach { p -> polynomial.addNode(p.x, p.y) } // Добавляем оставшиеся точки как узлы полинома
                         polynomialPainter.addPolynomial(polynomial) // Добавляем полином на отрисовку
+                        derPolynomialPainter.removeAll()
+                        derPolynomialPainter.addPolynomial(polynomial.derivative())
                     }
                     mainPanel.paint(mainPanel.graphics) // Отрисовываем панель
                 }

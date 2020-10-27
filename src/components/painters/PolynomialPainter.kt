@@ -4,12 +4,12 @@ package components.painters
 import polynomials.Polynomial
 import util.ConvertData
 import util.Converter
-import java.awt.BasicStroke
-import java.awt.Graphics
-import java.awt.Graphics2D
-import java.awt.RenderingHints
+import java.awt.*
 
 open class PolynomialPainter(private var convertData: ConvertData): Painter {
+
+    private var color = Color.GREEN
+    public fun setColor(newColor: Color){color = newColor}
 
     private val polynomials = mutableListOf<Polynomial>()
 
@@ -19,10 +19,14 @@ open class PolynomialPainter(private var convertData: ConvertData): Painter {
     fun removePolynomial(polynomial: Polynomial){
         polynomials.remove(polynomial)
     }
+    fun removeAll(){
+        polynomials.clear()
+    }
 
     override fun draw(g: Graphics?, Width: Int, Height: Int) {
 
         val g2 = g as Graphics2D
+        g2.color = color
         g2.stroke = BasicStroke(2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)
         val rh = mapOf(
                 RenderingHints.KEY_ANTIALIASING to RenderingHints.VALUE_ANTIALIAS_ON,
