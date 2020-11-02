@@ -11,6 +11,7 @@ open class PolynomialPainter(private var convertData: ConvertData): Painter {
     private var color = Color.GREEN
     public fun setColor(newColor: Color){color = newColor}
 
+
     private val polynomials = mutableListOf<Polynomial>()
 
     fun addPolynomial(polynomial: Polynomial){

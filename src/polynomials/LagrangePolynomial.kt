@@ -1,6 +1,8 @@
 package polynomials
 
-class LagrangePolynomial(xfx: MutableMap<Double, Double>) : Polynomial(){
+class LagrangePolynomial
+
+(xfx: MutableMap<Double, Double>) : Polynomial(){
 
     private val xfx = xfx.toMutableMap()
     init{

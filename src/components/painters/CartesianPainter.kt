@@ -5,7 +5,6 @@ import util.Converter
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics
-import kotlin.math.roundToInt
 
 class CartesianPainter(private var convertData: ConvertData) : Painter {
 
@@ -42,17 +41,27 @@ class CartesianPainter(private var convertData: ConvertData) : Painter {
         if (y0 <= 0) y0 = 0
         if (y0 > convertData.height) y0 = convertData.height
 
-        val kX = (100 / (convertData.xMax - convertData.xMin)).roundToInt().toDouble()
+        val kX = when {
+            convertData.xMax - convertData.xMin < 10 -> { 10.0 }
+            convertData.xMax - convertData.xMin < 24 -> { 5.0 }
+            convertData.xMax - convertData.xMin < 36 -> { 2.5 }
+            else -> { 1.25 }
+        }
         for (i in (convertData.xMin * kX).toInt() until (convertData.xMax * kX).toInt()) {
 
             val gap = if (i % 10 == 0) 2 else if (i % 5 == 0) 1 else 0
-            val x = Converter.xCrt2Scr(((i / kX) * 100).toInt()/ 100.0, convertData)
+            val x = Converter.xCrt2Scr((i / kX), convertData)
             g.drawLine(x, y0 - dt - gap, x, y0 + dt + gap)
         }
-        val kY = (100 / (convertData.yMax - convertData.yMin)).roundToInt().toDouble()
+        val kY = when {
+            convertData.yMax - convertData.yMin < 10 -> { 10.0 }
+            convertData.yMax - convertData.yMin < 24 -> { 5.0 }
+            convertData.yMax - convertData.yMin < 36 -> { 2.5 }
+            else -> { 1.25 }
+        }
         for (i in (convertData.yMin * kY).toInt() until (convertData.yMax * kY).toInt()) {
             val gap = if (i % 10 == 0) 2 else if (i % 5 == 0) 1 else 0
-            val y = Converter.yCrt2Scr(((i / kY) * 100).toInt()/ 100.0, convertData)
+            val y = Converter.yCrt2Scr((i / kY), convertData)
             g.drawLine(x0 - dt - gap, y, x0 + dt + gap, y)
         }
     }
@@ -72,23 +81,35 @@ class CartesianPainter(private var convertData: ConvertData) : Painter {
 
         g.color = Color.BLUE
 
-        val kX = (100 / (convertData.xMax - convertData.xMin)).roundToInt().toDouble()
+        val kX = when {
+            convertData.xMax - convertData.xMin < 10 -> { 10.0 }
+            convertData.xMax - convertData.xMin < 24 -> { 5.0 }
+            convertData.xMax - convertData.xMin < 36 -> { 2.5 }
+            else -> { 1.25 }
+        }
+
         for (i in (convertData.xMin * kX).toInt() until (convertData.xMax * kX).toInt()) {
             if (i % 5 != 0 || i == 0) continue
-            val x = Converter.xCrt2Scr(((i / kX) * 100).toInt()/ 100.0, convertData)
-            val dy = m.getStringBounds((((i / kX) * 100).toInt()/ 100.0).toString(), g).height.toInt()
-            val dx = m.getStringBounds((((i / kX) * 100).toInt()/ 100.0).toString(), g).width.toInt()
+            val x = Converter.xCrt2Scr(((i / kX)), convertData)
+            val dy = m.getStringBounds((((i / kX))).toString(), g).height.toInt()
+            val dx = m.getStringBounds(((i / kX)).toString(), g).width.toInt()
             val dt: Int = if (y0 > convertData.height - dy) dy + 5 else 0
-            g.drawString((((i / kX) * 100).toInt()/ 100.0).toString(), x - dx/2, y0 + dy - dt)
+            g.drawString((i / kX).toString(), x - dx / 2, y0 + dy - dt)
         }
-        val kY = (100 / (convertData.yMax - convertData.yMin)).roundToInt().toDouble()
-        for (i in (convertData.yMin * kY).toInt()..(convertData.yMax * kY).toInt()) {
+
+        val kY = when {
+            convertData.yMax - convertData.yMin < 10 -> { 10.0 }
+            convertData.yMax - convertData.yMin < 24 -> { 5.0 }
+            convertData.yMax - convertData.yMin < 36 -> { 2.5 }
+            else -> { 1.25 }
+        }
+        for (i in (convertData.yMin * kY).toInt() until (convertData.yMax * kY).toInt()) {
             if (i % 5 != 0 || i == 0) continue
-            val y = Converter.yCrt2Scr(((i / kY) * 100).toInt()/ 100.0, convertData)
-            val dy = m.getStringBounds((((i / kY) * 100).toInt()/ 100.0).toString(), g).height.toInt()
-            val dx = m.getStringBounds((((i / kY) * 100).toInt()/ 100.0).toString(), g).width.toInt()
+            val y = Converter.yCrt2Scr((i / kY), convertData)
+            val dy = m.getStringBounds((i / kY).toString(), g).height.toInt()
+            val dx = m.getStringBounds((i / kY).toString(), g).width.toInt()
             val dt: Int = if (x0 > convertData.width - dx) 10 + dx else 0
-            g.drawString((((i / kY) * 100).toInt()/ 100.0).toString(), x0 + 4 - dt, y + dy/3)
+            g.drawString((i / kY).toString(), x0 + 4 - dt, y + dy / 3)
         }
     }
 
